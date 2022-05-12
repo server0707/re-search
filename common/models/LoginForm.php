@@ -54,12 +54,36 @@ class LoginForm extends Model
      *
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    public function loginClient()
     {
+        $user = $this->getUser();
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            if ($user->isClient()){
+                return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+            }else{
+                $this->addError('password', Yii::t('app','Incorrect username or password.'));
+            }
         }
         
+        return false;
+    }
+
+    /**
+     * Logs in an admin using the provided username and password.
+     *
+     * @return bool whether the user is logged in successfully
+     */
+    public function loginAdmin()
+    {
+        $user = $this->getUser();
+        if ($this->validate()) {
+            if ($user->isAdmin()){
+                return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+            }else{
+                $this->addError('password', Yii::t('app','Incorrect username or password.'));
+            }
+        }
+
         return false;
     }
 
