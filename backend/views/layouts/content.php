@@ -2,6 +2,7 @@
 /* @var $content string */
 
 use yii\bootstrap4\Breadcrumbs;
+
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -36,6 +37,18 @@ use yii\bootstrap4\Breadcrumbs;
 
     <!-- Main content -->
     <div class="content">
+        <?php if (Yii::$app->session->hasFlash('success')) : ?>
+            <?= \hail812\adminlte\widgets\Alert::widget([
+                'type' => 'success',
+                'body' => Yii::$app->session->getFlash('success'),
+            ]) ?>
+        <?php endif; ?>
+        <?php if (Yii::$app->session->hasFlash('error')) : ?>
+            <?= \hail812\adminlte\widgets\Alert::widget([
+                'type' => 'error',
+                'body' => Yii::$app->session->getFlash('error'),
+            ]) ?>
+        <?php endif; ?>
         <?= $content ?><!-- /.container-fluid -->
     </div>
     <!-- /.content -->

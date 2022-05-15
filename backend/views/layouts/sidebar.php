@@ -88,6 +88,12 @@
                         'badge' => '<span class="right badge badge-danger">'.\common\models\Keyword::find()->count().'</span>',
                         'url' => ['/keywords'],
                     ],
+                    [
+                        'label' => 'Adminlar',
+                        'icon' => 'users',
+                        'badge' => '<span class="right badge badge-danger">'.\common\models\User::find()->count().'</span>',
+                        'url' => ['/user'],
+                    ],
                     ['label' => 'Yii2 PROVIDED', 'header' => true],
 //                    ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii', 'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],

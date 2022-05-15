@@ -17,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
+ * @property string $new_password
  * @property string $auth_key
  * @property integer $status
  * @property integer $role
@@ -33,6 +34,7 @@ class User extends ActiveRecord implements IdentityInterface
     const ROLE_CLIENT = 0;
     const ROLE_ADMIN = 1;
 
+    public $new_password;
 
     /**
      * {@inheritdoc}
@@ -58,11 +60,26 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'email'], 'required'],
+            [['username', 'email'], 'unique'],
+            [['new_password'], 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
 
-            ['role', 'default', 'value' => self::ROLE_CLIENT],
+            ['role', 'default', 'value' => self::ROLE_ADMIN],
             ['role', 'in', 'range' => [self::ROLE_CLIENT, self::ROLE_ADMIN]],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'Login',
+            'new_password' => 'Parol',
+            'status' => 'Holat',
+            'created_at' => 'Yaratilgan',
+            'updated_at' => 'Yangilangan',
         ];
     }
 
