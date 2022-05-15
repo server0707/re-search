@@ -2,18 +2,16 @@
 
 namespace frontend\controllers;
 
-use frontend\models\ResendVerificationEmailForm;
-use frontend\models\VerifyEmailForm;
+use common\models\Article;
+use common\models\Editorials;
+use common\models\InteractiveServices;
+use common\models\Journal;
+use common\models\News;
 use Yii;
-use yii\base\InvalidArgumentException;
-use yii\web\BadRequestHttpException;
+use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
+use yii\db\Query;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
 /**
@@ -21,36 +19,6 @@ use frontend\models\ContactForm;
  */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * {@inheritdoc}
@@ -79,41 +47,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->loginClient()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
      * Displays contact page.
      *
      * @return mixed
@@ -122,7 +55,7 @@ class SiteController extends Controller
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+            if ($model->saveData()) {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
             } else {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
@@ -147,113 +80,183 @@ class SiteController extends Controller
     }
 
     /**
-     * Signs user up.
+     * view all journals
      *
      * @return mixed
      */
-    public function actionSignup()
+    public function actionJournals()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+        return $this->render('journals');
     }
 
     /**
-     * Requests password reset.
+     * view all articles
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset()
+    public function actionArticles()
     {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            }
-
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-        }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
+        return $this->render('articles');
     }
 
     /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
-    public function actionResetPassword($token)
-    {
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->goHome();
-        }
-
-        return $this->render('resetPassword', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Verify email address
-     *
-     * @param string $token
-     * @throws BadRequestHttpException
-     * @return yii\web\Response
-     */
-    public function actionVerifyEmail($token)
-    {
-        try {
-            $model = new VerifyEmailForm($token);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-        if (($user = $model->verifyEmail()) && Yii::$app->user->login($user)) {
-            Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
-            return $this->goHome();
-        }
-
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
-        return $this->goHome();
-    }
-
-    /**
-     * Resend verification email
+     * view all news
      *
      * @return mixed
      */
-    public function actionResendVerificationEmail()
+    public function actionNews()
     {
-        $model = new ResendVerificationEmailForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                return $this->goHome();
-            }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+        $newsDataProvider = new ActiveDataProvider([
+            'query' => News::find()->where(['status' => News::STATUS_ACTIVE])->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+        return $this->render('news', compact('newsDataProvider'));
+    }
+
+    /**
+     * view all news detail
+     *
+     * @return mixed
+     */
+    public function actionNewsDetail($id)
+    {
+        $new = News::findOne(['id' => $id, 'status' => News::STATUS_ACTIVE]);
+        $this->setMeta($new->title, $new->keywords, $new->description);
+
+        return $this->render('news-detail', compact('new'));
+    }
+
+    /**
+     * view all editorials
+     *
+     * @return mixed
+     */
+    public function actionEditorial()
+    {
+        $editorials = Editorials::find()->orderBy(['view_number' => SORT_ASC])->all();
+        return $this->render('editorial', compact('editorials'));
+    }
+
+    /**
+     * view all archives
+     *
+     * @return mixed
+     */
+    public function actionArchive()
+    {
+        $query = new Query();
+        $yearsDataProvider = new ActiveDataProvider([
+            'query' => $query->select(['year' => 'YEAR(published)'])->from('journal')->distinct('year')->orderBy(['year' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 12,
+            ],
+        ]);
+
+        return $this->render('archive', compact('yearsDataProvider'));
+    }
+
+    /**
+     * view all archive month
+     *
+     * @return mixed
+     */
+    public function actionArchiveMonths($year)
+    {
+        $query = new Query();
+        $monthsDataProvider = new ActiveDataProvider([
+            'query' => $query->select(['month' => 'MONTH(published)'])->from('journal')->where(['YEAR(published)' => $year])->distinct('month')->orderBy(['month' => SORT_ASC]),
+            'pagination' => [
+                'pageSize' => 15,
+            ],
+        ]);
+
+        return $this->render('archive-month', compact('monthsDataProvider', 'year'));
+    }
+
+    /**
+     * view all archive journals
+     *
+     * @return mixed
+     */
+    public function actionArchiveJournals($year, $month)
+    {
+        $query = new Query();
+        $journalsDataProvider = new ActiveDataProvider([
+            'query' => $query->select('*')->from('journal')->where(['YEAR(published)' => $year, 'MONTH(published)' => $month])->orderBy(['published' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 15,
+            ],
+        ]);
+
+        //        Yillarni olish BEGIN
+        $query = new Query();
+        $years = $query->select(['year' => 'YEAR(published)'])->from('journal')->distinct('year')->orderBy(['year' => SORT_DESC])->limit(10)->all();
+        //        Yillarni olish END
+
+        return $this->render('archive-journals', compact('journalsDataProvider', 'year', 'month', 'years'));
+    }
+
+    /**
+     * view all departments of journal
+     *
+     * @return mixed
+     */
+    public function actionDepartmentsOfJournal()
+    {
+        $journalsDataProvider = new ActiveDataProvider([
+            'query' => Journal::find()->orderBy(['published' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 12,
+            ],
+        ]);
+        return $this->render('departments-of-journal', compact('journalsDataProvider'));
+    }
+
+    /**
+     * view all journal details
+     *
+     * @return mixed
+     */
+    public function actionJournalDetails($id)
+    {
+        $current_journal = Journal::findOne(['id' => $id]);
+        $articlesDataProvider = new ActiveDataProvider([
+            'query' => Article::find()->where(['journal_id' => $id])->orderBy(['pagesOfJournal' => SORT_ASC]),
+            'pagination' => [
+                'pageSize' => 2,
+            ],
+        ]);
+
+        //        Oxirgi 20 ta jurnal BEGIN
+        $journals = Journal::find()->orderBy(['published' => SORT_DESC])->limit(10)->all();
+        //        Oxirgi 20 ta jurnal END
+
+        return $this->render('journal-details', compact('current_journal', 'articlesDataProvider', 'journals'));
+    }
+
+    /**
+     * view all interactive services
+     *
+     * @return mixed
+     */
+    public function actionInteractiveServices()
+    {
+        $model = new InteractiveServices();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Jo'natmangiz qabul qilindi. Tez orada siz bilan bog'lanamiz!");
+            return $this->refresh();
         }
 
-        return $this->render('resendVerificationEmail', [
-            'model' => $model
-        ]);
+        return $this->render('interactive-services', compact('model'));
+    }
+
+    protected function setMeta($title = null, $keywords = null, $description = null)
+    {
+        $this->view->title = $title;
+        $this->view->registerMetaTag(['name' => 'keywords', 'content' => "$keywords"]);
+        $this->view->registerMetaTag(['name' => 'description', 'content' => "$description"]);
     }
 }

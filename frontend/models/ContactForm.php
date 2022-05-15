@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\Contacts;
 use Yii;
 use yii\base\Model;
 
@@ -38,7 +39,11 @@ class ContactForm extends Model
     public function attributeLabels()
     {
         return [
-            'verifyCode' => 'Verification Code',
+            'verifyCode' => 'Robot emaslik tekshiruvi',
+            'name' => 'To\'liq ismingiz',
+            'email' => 'E-mail manzilingiz',
+            'subject' => 'Mavzu',
+            'body' => 'Habar matni',
         ];
     }
 
@@ -57,5 +62,18 @@ class ContactForm extends Model
             ->setSubject($this->subject)
             ->setTextBody($this->body)
             ->send();
+    }
+
+    /**
+     * Save data
+     */
+    public function saveData(){
+        $contact = new Contacts();
+        $contact->fullName = $this->name;
+        $contact->email = $this->email;
+        $contact->subject = $this->subject;
+        $contact->body = $this->body;
+
+        return $contact->save();
     }
 }

@@ -43,6 +43,10 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '' => 'site/index',
+                'journals' => 'journal/index',
+                'articles' => 'article/index',
+                'news' => 'news/index',
+                'keywords' => 'keyword/index',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
