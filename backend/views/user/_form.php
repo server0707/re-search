@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput() ?>
 
     <?php if ($model->isNewRecord) : ?>
-    <?= $form->field($model, 'new_password')->textInput() ?>
+    <?= $form->field($model, 'new_password')->passwordInput() ?>
     <?php endif; ?>
 
     <?= $form->field($model, 'status')->radioList([\common\models\User::STATUS_ACTIVE => 'Faol', \common\models\User::STATUS_INACTIVE => 'Nofaol']) ?>
