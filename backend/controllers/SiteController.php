@@ -65,7 +65,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $newContactsCount = \common\models\Contacts::find()->where(['viewed' => false])->count();
+        $newInteractiveServicesCount = \common\models\InteractiveServices::find()->where(['viewed' => false])->count();
+        return $this->render('index', compact('newContactsCount', 'newInteractiveServicesCount'));
     }
 
     /**
@@ -105,7 +107,8 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionFake(){
+    public function actionFake()
+    {
         /**
          * get faker object as $faker
          */
