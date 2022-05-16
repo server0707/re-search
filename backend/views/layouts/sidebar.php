@@ -72,13 +72,13 @@
                     ],
                     [
                         'label' => 'Aloqa',
-                        'icon' => 'spell-check',
+                        'icon' => 'circle-nodes',
                         'badge' => '<span class="right badge badge-warning">'.\common\models\Contacts::find()->where(['viewed' => false])->count().'</span>'.'<span class="right badge badge-danger">'.\common\models\Contacts::find()->count().'</span>',
                         'url' => ['/contacts'],
                     ],
                     [
                         'label' => 'Interaktiv xizmatlar',
-                        'icon' => 'spell-check',
+                        'icon' => 'ethernet',
                         'badge' => '<span class="right badge badge-warning">'.\common\models\InteractiveServices::find()->where(['viewed' => false])->count().'</span>'.'<span class="right badge badge-danger">'.\common\models\InteractiveServices::find()->count().'</span>',
                         'url' => ['/interactive-services'],
                     ],
