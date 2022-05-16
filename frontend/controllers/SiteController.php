@@ -55,7 +55,10 @@ class SiteController extends Controller
             "",
             Url::base(true)
         );
-        return $this->render('index');
+
+        $last_published_journals = Journal::find()->orderBy(['published' => SORT_DESC])->limit(5)->all();
+
+        return $this->render('index', compact('last_published_journals'));
     }
 
     /**

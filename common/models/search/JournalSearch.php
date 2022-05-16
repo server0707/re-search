@@ -18,7 +18,7 @@ class JournalSearch extends Journal
     {
         return [
             [['id', 'pages_count', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'published', 'file_name'], 'safe'],
+            [['name', 'published', 'file_name', 'description'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class JournalSearch extends Journal
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'file_name', $this->file_name])
+            ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'published', $this->published]);
 
         return $dataProvider;

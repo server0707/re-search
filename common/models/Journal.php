@@ -14,6 +14,7 @@ use yii\web\UploadedFile;
  * @property string $name
  * @property int $pages_count
  * @property string $published
+ * @property string $description
  * @property string $file_name
  * @property int|null $created_at
  * @property int|null $updated_at
@@ -53,9 +54,11 @@ class Journal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'pages_count', 'published', 'file_name', 'file'], 'required'],
+            [['name', 'pages_count', 'published', 'file_name', 'file', 'description'], 'required'],
             [['pages_count', 'created_at', 'updated_at'], 'integer'],
             [['published'], 'date', 'format' => 'php:Y-m-d'],
+            [['description'], 'string', 'max' => 500],
+
             [['name', 'file_name'], 'string', 'max' => 255],
             [['name'], 'unique', 'targetAttribute' => ['name', 'published'], 'message' => 'Bunday nomli va ushbu sanadagi jurnal oldin bazaga qo\'shilgan!'],
 
@@ -77,6 +80,7 @@ class Journal extends \yii\db\ActiveRecord
             'pages_count' => 'Varoqlar soni',
             'published' => 'Nashr sanasi',
             'file_name' => 'Fayl nomi',
+            'description' => 'Tavsif',
             'file' => 'Fayl',
             'image' => 'Rasm',
             'gallery' => 'Galereya',

@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col-8">
             <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+
+            <?= $form->field($model, 'description')->widget(\dosamigos\tinymce\TinyMce::className()) ?>
         </div>
         <div class="col-4 bg-info" style="border-radius: 15px">
             <div class="row">
