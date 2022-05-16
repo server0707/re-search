@@ -11,6 +11,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\Query;
+use yii\helpers\Url;
 use yii\web\Controller;
 use frontend\models\ContactForm;
 
@@ -43,6 +44,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $this->setMeta(
+            'Bosh sahifa',
+            "Bosh sahifa home page index asosiy",
+            "Ziyo scientific center - ilmiy tadqiqotlar markazi 1119360-sonli guvohnoma asosida faoliyatini yuritadi.",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
         return $this->render('index');
     }
 
@@ -53,6 +65,18 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
+        $this->setMeta(
+            'Aloqa',
+            "Aloqa contact connect",
+            "Biz bilan bog'lanish. Telefon: +998993473605, Manzil: Xorazm viloyati, Shovot tumani Oʻzbekiston koʻchasi 30-uy",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/contact']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->saveData()) {
@@ -76,27 +100,18 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
+        $this->setMeta(
+            "Umumiy ma'lumotlar",
+            "Umumiy ma'lumotlar biz haqimizda about",
+            "",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/about']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
         return $this->render('about');
-    }
-
-    /**
-     * view all journals
-     *
-     * @return mixed
-     */
-    public function actionJournals()
-    {
-        return $this->render('journals');
-    }
-
-    /**
-     * view all articles
-     *
-     * @return mixed
-     */
-    public function actionArticles()
-    {
-        return $this->render('articles');
     }
 
     /**
@@ -112,6 +127,23 @@ class SiteController extends Controller
                 'pageSize' => 10,
             ],
         ]);
+
+        if (empty($newsDataProvider->getModels())) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        $this->setMeta(
+            "Yangiliklar",
+            "Yangiliklar, news, Yangilik, new",
+            "",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/news']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         return $this->render('news', compact('newsDataProvider'));
     }
 
@@ -123,7 +155,22 @@ class SiteController extends Controller
     public function actionNewsDetail($id)
     {
         $new = News::findOne(['id' => $id, 'status' => News::STATUS_ACTIVE]);
-        $this->setMeta($new->title, $new->keywords, $new->description);
+
+        if (empty($new)) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        $this->setMeta(
+            "$new->title",
+            "$new->keywords",
+            "$new->description",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . '/news-detail/' . $id,
+            Url::base(true) . $new->getImage()->getUrl(),
+            "",
+            Url::base(true)
+        );
 
         return $this->render('news-detail', compact('new'));
     }
@@ -136,6 +183,19 @@ class SiteController extends Controller
     public function actionEditorial()
     {
         $editorials = Editorials::find()->orderBy(['view_number' => SORT_ASC])->all();
+
+        $this->setMeta(
+            'Tahririyat',
+            "tahririyat, editorials, editorial",
+            "Tahririyat bo'limi",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/editorial']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         return $this->render('editorial', compact('editorials'));
     }
 
@@ -153,6 +213,18 @@ class SiteController extends Controller
                 'pageSize' => 12,
             ],
         ]);
+
+        $this->setMeta(
+            'ARXIV - Yillar',
+            "Yillar, yil, year, years, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022",
+            "",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/archive']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
 
         return $this->render('archive', compact('yearsDataProvider'));
     }
@@ -172,6 +244,22 @@ class SiteController extends Controller
             ],
         ]);
 
+        if (empty($monthsDataProvider->getModels())) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        $this->setMeta(
+            'ARXIV(' . $year . ') - Oylar',
+            "oylar, months, month, oy, Yanvar, Fevral, Mart, Aprel, May, Iyun, Iyul, Avgust, Sentabr, Oktabr, Noyabr, Dekabr",
+            "",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . '/archive-months/' . $year,
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         return $this->render('archive-month', compact('monthsDataProvider', 'year'));
     }
 
@@ -190,6 +278,23 @@ class SiteController extends Controller
             ],
         ]);
 
+        if (empty($journalsDataProvider->getModels())) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        $month_names = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+        $this->setMeta(
+            'ARXIV(' . $year . '-' . $month_names[$month - 1] . ') - Jurnallar',
+            "journal, journals, jurnallar, jurnal, arxive, archive, $year, {$month_names[$month - 1]}",
+            "",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . '/archive-journals/' . $year . '/' . $month,
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         //        Yillarni olish BEGIN
         $query = new Query();
         $years = $query->select(['year' => 'YEAR(published)'])->from('journal')->distinct('year')->orderBy(['year' => SORT_DESC])->limit(10)->all();
@@ -205,6 +310,18 @@ class SiteController extends Controller
      */
     public function actionDepartmentsOfJournal()
     {
+        $this->setMeta(
+            "Jurnal bo'limlari",
+            "journal, journals, jurnallar, jurnal, bo'limlar, bolimlar",
+            "Jurnal bo'limlari",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['/departments-of-journal']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         $journalsDataProvider = new ActiveDataProvider([
             'query' => Journal::find()->orderBy(['published' => SORT_DESC]),
             'pagination' => [
@@ -222,12 +339,28 @@ class SiteController extends Controller
     public function actionJournalDetails($id)
     {
         $current_journal = Journal::findOne(['id' => $id]);
+        if (empty($current_journal)) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
         $articlesDataProvider = new ActiveDataProvider([
             'query' => Article::find()->where(['journal_id' => $id])->orderBy(['pagesOfJournal' => SORT_ASC]),
             'pagination' => [
-                'pageSize' => 2,
+                'pageSize' => 10,
             ],
         ]);
+
+        $this->setMeta(
+            "$current_journal->name",
+            "journal, journals, jurnallar, jurnal, $current_journal->name, $current_journal->published, $current_journal->pages_count",
+            "$current_journal->name  $current_journal->published  $current_journal->pages_count",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . '/journal-details/' . $id,
+            Url::base(true) . $current_journal->getImage()->getUrl(),
+            "",
+            Url::base(true)
+        );
 
         //        Oxirgi 20 ta jurnal BEGIN
         $journals = Journal::find()->orderBy(['published' => SORT_DESC])->limit(10)->all();
@@ -243,6 +376,18 @@ class SiteController extends Controller
      */
     public function actionInteractiveServices()
     {
+        $this->setMeta(
+            "Interaktiv xizmatlar",
+            "interactive, services, interactive services, interactive-services, interaktiv xizmatlar, interaktiv, xizmatlar, interaktivxizmatlar, interaktiv-xizmatlar",
+            "Maqola uchun UDK raqam olish. Disertatsiya uchun UDK raqam olish. Antiplagiatda tekshirish.",
+            Yii::$app->params['supportEmail'],
+            "",
+            Url::base(true) . Url::to(['site/interactive-services']),
+            Url::base(true) . "/images/logo.png",
+            "",
+            Url::base(true)
+        );
+
         $model = new InteractiveServices();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -253,10 +398,23 @@ class SiteController extends Controller
         return $this->render('interactive-services', compact('model'));
     }
 
-    protected function setMeta($title = null, $keywords = null, $description = null)
+    protected function setMeta($title = null, $keywords = null, $description = null, $contact = null,
+                               $ogTitle = null, $ogUrl = null, $ogImage = null, $ogDescription = null,
+                               $ogSiteName = null)
     {
         $this->view->title = $title;
         $this->view->registerMetaTag(['name' => 'keywords', 'content' => "$keywords"]);
         $this->view->registerMetaTag(['name' => 'description', 'content' => "$description"]);
+        $this->view->registerMetaTag(['name' => 'contact', 'content' => "$contact"]);
+
+        $this->view->registerMetaTag(['property' => 'og:title', 'content' => ($ogTitle != null) ? "$ogTitle" : "$title"]);
+        $this->view->registerMetaTag(['property' => 'og:url', 'content' => "$ogUrl"]);
+        $this->view->registerMetaTag(['property' => 'og:image', 'content' => "$ogImage"]);
+        $this->view->registerMetaTag(['property' => 'og:description', 'content' => ($ogDescription != null) ? "$ogDescription" : "$description"]);
+        $this->view->registerMetaTag(['property' => 'og:site_name', 'content' => "$ogSiteName"]);
+
+        $this->view->registerMetaTag(['name' => 'twitter:site', 'content' => "$ogSiteName"]);
+        $this->view->registerMetaTag(['name' => 'twitter:title', 'content' => "$title"]);
+        $this->view->registerMetaTag(['name' => 'twitter:description', 'content' => ($ogDescription != null) ? "$ogDescription" : "$description"]);
     }
 }
