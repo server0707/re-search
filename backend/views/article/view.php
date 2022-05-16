@@ -33,7 +33,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'theme',
             'authors:html',
             'pagesOfJournal',
-            'file_name',
+            [
+                'attribute' => 'file_name',
+                'value' => \yii\bootstrap4\Html::a($model->file_name, ['../../articles/' . $model->file_name]),
+                'format' => 'html',
+            ],
             [
                 'attribute' => 'journal_id',
                 'value' => $model->journal->name

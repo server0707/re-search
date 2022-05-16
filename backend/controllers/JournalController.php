@@ -41,6 +41,7 @@ class JournalController extends Controller
     {
         $searchModel = new JournalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->query->orderBy(['published' => SORT_DESC]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

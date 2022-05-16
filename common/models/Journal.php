@@ -54,7 +54,7 @@ class Journal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'pages_count', 'published', 'file_name', 'file', 'description'], 'required'],
+            [['name', /*'pages_count',*/ 'published', /*'file_name', 'file',*/ 'description'], 'required'],
             [['pages_count', 'created_at', 'updated_at'], 'integer'],
             [['published'], 'date', 'format' => 'php:Y-m-d'],
             [['description'], 'string', 'max' => 500],

@@ -33,11 +33,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'pages_count',
             'published',
-            'file_name',
+            [
+                'attribute' => 'file_name',
+                'value' => \yii\bootstrap4\Html::a($model->file_name, ['../../journals/' . $model->file_name]),
+                'format' => 'html',
+            ],
             'description:html',
             'created_at:datetime',
             'updated_at:datetime',
+            [
+                'label' => 'Rasm',
+                'value' => \yii\bootstrap4\Html::img($model->getImage()->getUrl(), ['class' => 'img-fluid']),
+                'format' => 'html'
+            ],
         ],
     ]) ?>
-
 </div>

@@ -15,9 +15,9 @@ class m220513_142714_create_journal_table extends Migration
         $this->createTable('{{%journal}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
-            'pages_count' => $this->integer()->notNull(),
+            'pages_count' => $this->integer(),
             'published' => $this->date()->notNull(),
-            'file_name' => $this->string(255)->notNull(),
+            'file_name' => $this->string(255),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ]);

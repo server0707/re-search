@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <!-- Start Single Counter -->
                         <?php foreach ($journalsDataProvider->getModels() as $journal) : ?>
                             <div class="col-md-4 col-sm-6" style="margin-top: 40px">
-                                <a href="/journals/<?= $journal['file_name'] ?>">
+                                <a href="<?=(!empty($journal['file_name']))? "/journals/{$journal['file_name']}":"#" ?>">
                                     <div class="mu-single-counter">
                                         <i class="fa fa-archive" style="color: #217ed3" aria-hidden="true"></i>
                                         <div class="counter-value" style="font-size: 15px;color: #217ed3;">
