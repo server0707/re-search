@@ -24,7 +24,7 @@ class ChangePasswordForm extends Model
     {
         return [
             [['current_password', 'new_password', 'confirm_password'], 'required'],
-            [['current_password', 'new_password', 'confirm_password'], 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            [['new_password', 'confirm_password'], 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
             ['current_password', 'validateCurrentPassword'],
             ['confirm_password', 'compare', 'compareAttribute' => 'new_password'],
         ];
