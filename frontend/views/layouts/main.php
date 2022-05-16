@@ -49,7 +49,7 @@ AppAsset::register($this);
             ['label' => 'Jurnal bo\'limlari', 'url' => ['departments-of-journal']],
             ['label' => 'Aloqa', 'url' => ['contact']],
             ['label' => 'Interaktiv xizmatlar', 'url' => ['site/interactive-services']],
-            ['label' => 'Adminstatsiya', 'url' => ['/admin'], 'options' => ['class' => 'ml-auto']],
+//            ['label' => 'Adminstatsiya', 'url' => ['/admin'], 'options' => ['class' => 'ml-auto']],
         ];
 
         echo Nav::widget([

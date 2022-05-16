@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'phone')->input('number') ?>
 
     <?= $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-        'template' => '<div class="row"><div class="col-12">{image}</div><div class="col-12">{input}</div></div>',
+        'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-9">{input}</div></div>',
     ]) ?>
 
     <div class="form-group">
