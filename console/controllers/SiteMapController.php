@@ -35,6 +35,9 @@ class SiteMapController extends Controller
         $journals = Journal::find()->all();
         foreach ($journals as $journal) {
             $content .= '<url><loc>' . Url::base(true) . '/journal-details/' . $journal->id . '</loc><priority>0.9</priority></url>';
+            if (!empty($journal->file_name)){
+                $content .= '<url><loc>' . Url::base(true) . '/journals/' . $journal->file_name . '</loc><priority>0.8</priority></url>';
+            }
         }
 
         $query = new Query();
