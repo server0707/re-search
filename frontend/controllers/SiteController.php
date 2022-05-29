@@ -347,7 +347,7 @@ class SiteController extends Controller
         }
 
         $articlesDataProvider = new ActiveDataProvider([
-            'query' => Article::find()->where(['journal_id' => $id])->orderBy(['pagesOfJournal' => SORT_ASC, 'created_at' => SORT_ASC]),
+            'query' => Article::find()->where(['journal_id' => $id])->orderBy([/*'pagesOfJournal' => SORT_ASC, */'created_at' => SORT_ASC]),
             'pagination' => [
                 'pageSize' => 10,
             ],
