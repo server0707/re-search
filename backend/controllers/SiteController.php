@@ -115,44 +115,44 @@ class SiteController extends Controller
         $faker = \Faker\Factory::create('en_EN');
 
         //        create 100 journals
-//        for ($i = 1; $i <= 100; $i++){
-//            $obj = new Journal();
-//            $obj->name = $faker->realText(255);
-//            $obj->file_name = $faker->filePath().'.'.$faker->fileExtension();
-//            $obj->published = $faker->date('Y-m-d');
-//            $obj->pages_count = $faker->numberBetween(100,1000);
-//            while (!$obj->save(false)){
-//                $obj->name = $faker->realText(255);
-//                $obj->published = $faker->date('Y-m-d');
-//            }
-//            unset($obj);
-//        }
+        for ($i = 1; $i <= 100; $i++){
+            $obj = new Journal();
+            $obj->name = $faker->realText(255);
+            $obj->file_name = $faker->filePath().'.'.$faker->fileExtension();
+            $obj->published = $faker->date('Y-m-d');
+            $obj->pages_count = $faker->numberBetween(100,1000);
+            while (!$obj->save(false)){
+                $obj->name = $faker->realText(255);
+                $obj->published = $faker->date('Y-m-d');
+            }
+            unset($obj);
+        }
 
         //        create 1000 articles
-//        for ($i = 1; $i <= 100; $i++){
-//            $obj = new Article();
-//            $obj->theme = $faker->realText(255);
-//            $obj->journal_id = $faker->numberBetween(1,100);
-//            $obj->file_name = $faker->filePath().'.'.$faker->fileExtension();
-//            $obj->authors = $faker->realText(500);
-//            $number = $faker->numberBetween(1,980);
-//            $obj->pagesOfJournal = $number . ' - ' . ($number + $faker->numberBetween(2, 20));
-//            $obj->save(false);
-//
-//            unset($obj);
-//        }
+        for ($i = 1; $i <= 1000; $i++){
+            $obj = new Article();
+            $obj->theme = $faker->realText(255);
+            $obj->journal_id = $faker->numberBetween(1,100);
+            $obj->file_name = $faker->filePath().'.'.$faker->fileExtension();
+            $obj->authors = $faker->realText(500);
+            $number = $faker->numberBetween(1,980);
+            $obj->pagesOfJournal = $number . ' - ' . ($number + $faker->numberBetween(2, 20));
+            $obj->save(false);
+
+            unset($obj);
+        }
 
         //        create 100 news
-//        for ($i = 1; $i <= 100; $i++){
-//            $obj = new News();
-//            $obj->title = $faker->realText(255);
-//            $obj->description = $faker->realText(255);
-//            $obj->content = $faker->realText(2000);
-//            $obj->status = $faker->numberBetween(0,1);
-//            $obj->save(false);
-//
-//            unset($obj);
-//        }
+        for ($i = 1; $i <= 100; $i++){
+            $obj = new News();
+            $obj->title = $faker->realText(255);
+            $obj->description = $faker->realText(255);
+            $obj->content = $faker->realText(2000);
+            $obj->status = $faker->numberBetween(0,1);
+            $obj->save(false);
+
+            unset($obj);
+        }
 
         return $this->goHome();
     }

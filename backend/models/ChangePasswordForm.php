@@ -30,6 +30,15 @@ class ChangePasswordForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'current_password' => "Joriy parol",
+            'new_password' => "Yangi parol",
+            'confirm_password' => "Yangi parolni tasdiqlash",
+        ];
+    }
+
     public function validateCurrentPassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
